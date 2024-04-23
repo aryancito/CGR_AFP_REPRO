@@ -474,3 +474,12 @@ df_melted.to_excel("ouput/Resultados_preliminares_APF_"+date_time_str+".xlsx")
 
 
 ########################################################################################################################
+fusion = pd.merge(df_afp_repro, df_melted, how='left', left_on='COD_UE', right_on='SEC_EJEC')
+# Agregar el campo estado_siaf
+df_afp_repro['estado_siaf'] = fusion.apply(lambda row: 'SI' if not pd.isnull(row['SEC_EJEC']) else 'NO', axis=1)
+
+# Mostrar el DataFrame resultante
+print(df_afp_repro)
+df_afp_repro["estado_siaf"].unique()
+
+df_afp_repro.to_excel("ouput/estado_APF_"+date_time_str+".xlsx")

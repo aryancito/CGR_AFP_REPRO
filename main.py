@@ -8,11 +8,27 @@ now = datetime.datetime.now()
 
 # Convertir a cadena de texto en el formato deseado
 date_time_str = now.strftime("%Y-%m-%d %H.%M.%S Hrs")
+
 # Definir la ruta de la carpeta
-carpeta = r'D:\OneDrive - contraloriape\Alerta AFP - avances\DATA consulta amigable\.csv'  # Asegúrate de cambiar esto por la ruta correcta
+carpeta1 = r'D:\OneDrive - contraloriape\Alerta AFP - avances\DATA consulta amigable\.csv'  # Asegúrate de cambiar esto por la ruta correcta
+carpeta2 = r'C:\Users\20764\OneDrive - contraloriape\Alerta AFP - avances\DATA consulta amigable\.csv'  # Asegúrate de cambiar esto por la ruta correcta
 out="ouput"
+try:
+    contenido = os.listdir(carpeta1)
+    carpeta=carpeta1
+except:
+    # Manejo de la excepción ZeroDivisionError del primer bloque try
+    print("PC_trabajo")
+
+try:
+    contenido = os.listdir(carpeta2)  # Esto lanzará una excepción ValueError
+    carpeta = carpeta2
+except:
+    # Manejo de la excepción ValueError del segundo bloque try
+    print("PC_home")
+
 # Listar el contenido de la carpeta
-contenido = os.listdir(carpeta)
+
 # Palabras clave a buscar en el campo 'META_NOMBRE'
 palabras_clave = ['AFP']
 
@@ -138,6 +154,7 @@ new_na_MES={ 'MONTO_DEVENGADO_ENERO': 'ENERO',
 df_final = df_final.rename(columns=new_na_MES)
 
 ########################################################################################################################
+
 campos_no_alterar=list(df_final.columns)
 indices_a_eliminar = [60,61,62,63,64,65,66,67,68,69,70,71]
 
@@ -151,6 +168,7 @@ for index in sorted(indices_a_eliminar, reverse=True):
 # Utilizar la función melt especificando las columnas a mantener inalteradas
 df_melted = df_final.melt(id_vars=campos_no_alterar, var_name='_MES', value_name='_DEVENGADO_MES')
 df_melted.to_excel(out+"\\"+"_data_test.xlsx")
+
 ########################################################################################################################
 
 df_melted['_CLASIFICACION'] =  (df_melted['TIPO_TRANSACCION'].astype(str) + "." +
@@ -450,7 +468,7 @@ df_melted['_DEVENGADO_MES_SIGNO'] = df_melted['_DEVENGADO_MES'].apply(lambda x: 
 
 
 ########################################################################################################################
-df_melted.to_excel("ouput/Resultados_preliminares_APF.xlsx")
+df_melted.to_excel("ouput/Resultados_preliminares_APF_"+date_time_str+".xlsx")
 
 
 
